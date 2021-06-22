@@ -1,8 +1,10 @@
 import streamlit as st
 import pandas as pd
+
 # import requests
 
 df = pd.read_csv("resource.csv")
+dfprice = pd.read_csv("price.csv")
 
 st.set_page_config(page_title="Eve Echoes Market", layout="wide", initial_sidebar_state="auto")
 
@@ -36,12 +38,19 @@ brocas = st.sidebar.selectbox("Brocas", [4, 5, 6, 7, 8, 9, 10])
 
 choices = (area, region, resource, brocas)
 
+#
 df["Daily"] = df["Output"].apply(lambda x: (x * brocas) * 24)
+
+peso = dfprice[dfprice["name"] == choices[2]]["height"].item()
+
+df["M3_Day"] = df["Daily"].apply(lambda x: x * peso).astype(float)
+price = dfprice[dfprice["name"] == choices[2]]["sell"].item()
+df["Price_Day"] = df["M3_Day"].apply(lambda x: x * price).astype(float)
 
 
 def page_body():
 
-    st.write(choices)
+    st.write(price)
 
     query = (
         df.loc[
@@ -62,20 +71,16 @@ def page_body():
         "Output"
     ].mean()
 
-    st.markdown(f"*Melhor Planeta*: {best_planet} - {best_output} - {daily_farm:.2f}")
+    st.markdown(
+        f"_Best Planet_: **{best_planet}** - Output: **{best_output}** - Prod/day: **{daily_farm:.2f}**"
+    )
 
-    st.write(f"Média de {choices[0]} = {media_output:.2f}")
+    st.write(
+        f"_Média de_ **{choices[2]}** em **{choices[0]}**: **{media_output:.2f}** - Cotação/day **{price}**"
+    )
 
     st.table(
-        query[
-            [
-                "Region",
-                "Constellation",
-                "Planet Name",
-                "Output",
-                "Daily",
-            ]
-        ]
+        query[["Region", "Constellation", "Planet Name", "Output", "M3_Day", "Daily", "Price_Day"]]
     )
 
 
