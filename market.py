@@ -50,7 +50,7 @@ df["Price_Day"] = df["M3_Day"].apply(lambda x: x * price).astype(float)
 
 def page_body():
 
-    st.write(price)
+    # st.write(price)
 
     query = (
         df.loc[
