@@ -1,7 +1,10 @@
-import streamlit as st
 import pandas as pd
+import streamlit as st
+import plotly.graph_objects as go
+import json
+import requests
+from datetime import datetime
 
-# import requests
 
 df = pd.read_csv("resource.csv")
 dfprice = pd.read_csv("price.csv")
@@ -41,6 +44,7 @@ st.sidebar.markdown("[Buy a coffe](https://nubank.com.br/pagar/147uyr/qAoqlRsrgI
 
 choices = (area, region, resource, brocas)
 
+
 #
 df["Daily"] = df["Output"].apply(lambda x: (x * brocas) * 24)
 
@@ -48,12 +52,11 @@ peso = dfprice[dfprice["name"] == choices[2]]["height"].item()
 
 df["M3_Day"] = df["Daily"].apply(lambda x: x * peso).astype(float)
 price = dfprice[dfprice["name"] == choices[2]]["sell"].item()
+id = dfprice[dfprice["name"] == choices[2]]["item_id"].item()
 df["Price_Day"] = df["M3_Day"].apply(lambda x: x * price).astype(float)
 
 
 def page_body():
-
-    # st.write(price)
 
     query = (
         df.loc[
@@ -83,8 +86,22 @@ def page_body():
     )
 
     st.table(
-        query[["Region", "Constellation", "Planet Name", "Output", "M3_Day", "Daily", "Price_Day"]]
+        query[
+            ["Region", "Constellation", "Planet Name", "Output", "M3_Day", "Daily", "Price_Day"]
+        ].head(10)
     )
+    #
+    r = requests.get(f"https://api.eve-echoes-market.com/market-stats/{id}")
+    temp = json.loads(r.text)
+    dfTemp = pd.DataFrame(temp)
+    dfTemp = dfTemp.dropna()
+    dfTemp["time"] = dfTemp["time"].apply(lambda x: datetime.fromtimestamp(x))
+    # dfTemp
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=dfTemp["time"], y=dfTemp["sell"], name="Sell", mode="lines"))
+    fig.add_trace(go.Scatter(x=dfTemp["time"], y=dfTemp["buy"], name="Buy", mode="lines"))
+    fig.layout.update(title_text="Time Series Data", xaxis_rangeslider_visible=True)
+    st.plotly_chart(fig)
 
 
 if __name__ == "__main__":
