@@ -16,7 +16,8 @@ def main():
     return None
 
 
-st.sidebar.header("Escolha o Recurso")
+st.sidebar.header("Choose Resource")
+
 area = st.sidebar.selectbox("Area", sorted(["HighSec", "LowSec", "NullSec"]))
 # region = st.sidebar.selectbox("Region", sorted(df["Region"].unique()))
 
@@ -78,7 +79,7 @@ def page_body():
     )
 
     st.write(
-        f"_Média de_ **{choices[2]}** em **{choices[0]}**: **{media_output:.2f}** - Current value **{price}**"
+        f"_Average_ **{choices[2]}** in **{choices[0]}**: **{media_output:.2f}** - Current value: **{price}**"
     )
 
     st.table(
