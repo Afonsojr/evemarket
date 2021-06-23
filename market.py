@@ -78,7 +78,7 @@ def page_body():
     )
 
     st.write(
-        f"_Média de_ **{choices[2]}** em **{choices[0]}**: **{media_output:.2f}** - Cotação/day **{price}**"
+        f"_Média de_ **{choices[2]}** em **{choices[0]}**: **{media_output:.2f}** - Current value **{price}**"
     )
 
     st.table(
