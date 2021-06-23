@@ -96,12 +96,13 @@ def page_body():
     dfTemp = pd.DataFrame(temp)
     dfTemp = dfTemp.dropna()
     dfTemp["time"] = dfTemp["time"].apply(lambda x: datetime.fromtimestamp(x))
-    # dfTemp
+
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=dfTemp["time"], y=dfTemp["sell"], name="Sell", mode="lines"))
     fig.add_trace(go.Scatter(x=dfTemp["time"], y=dfTemp["buy"], name="Buy", mode="lines"))
     fig.layout.update(title_text="Time Series Data", xaxis_rangeslider_visible=True)
     st.plotly_chart(fig)
+    st.table(dfTemp.describe())
 
 
 if __name__ == "__main__":
