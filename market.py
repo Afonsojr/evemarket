@@ -1,10 +1,10 @@
-import pandas as pd
-import streamlit as st
-import plotly.graph_objects as go
 import json
-import requests
 from datetime import datetime
 
+import pandas as pd
+import plotly.graph_objects as go
+import requests
+import streamlit as st
 
 df = pd.read_csv("resource.csv")
 dfprice = pd.read_csv("price.csv")
