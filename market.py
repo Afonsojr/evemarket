@@ -38,7 +38,7 @@ else:
     )
 
 resource = st.sidebar.selectbox("Resource", sorted(df["Resource"].unique()))
-brocas = st.sidebar.selectbox("Brocas", [4, 5, 6, 7, 8, 9, 10])
+brocas = st.sidebar.selectbox("Brocas", [4, 5, 6, 7, 8, 9, 10, 12])
 
 st.sidebar.markdown("[Buy a coffe](https://nubank.com.br/pagar/147uyr/qAoqlRsrgI)")
 
